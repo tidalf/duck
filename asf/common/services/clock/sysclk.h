@@ -3,9 +3,7 @@
  *
  * \brief System clock management
  *
- * Copyright (c) 2010-2014 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
+ * Copyright (C) 2010 Atmel Corporation. All rights reserved.
  *
  * \page License
  *
@@ -13,64 +11,37 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
+ * from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ * Atmel AVR product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
  * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
  */
 #ifndef SYSCLK_H_INCLUDED
 #define SYSCLK_H_INCLUDED
 
-#include "parts.h"
+#include <parts.h>
 #include "conf_clock.h"
 
-#if SAM3S
-# include "sam3s/sysclk.h"
-#elif SAM3U
-# include "sam3u/sysclk.h"
-#elif SAM3N
-# include "sam3n/sysclk.h"
-#elif SAM3XA
-# include "sam3x/sysclk.h"
-#elif SAM4S
-# include "sam4s/sysclk.h"
-#elif SAM4E
-# include "sam4e/sysclk.h"
-#elif SAM4C
-# include "sam4c/sysclk.h"
-#elif SAM4CM
-# include "sam4cm/sysclk.h"
-#elif SAM4CP
-# include "sam4cp/sysclk.h"
-#elif SAM4L
-# include "sam4l/sysclk.h"
-#elif SAM4N
-# include "sam4n/sysclk.h"
-#elif SAMG
-# include "samg/sysclk.h"
-#elif (UC3A0 || UC3A1)
+#if (UC3A0 || UC3A1)
 # include "uc3a0_a1/sysclk.h"
 #elif UC3A3
 # include "uc3a3_a4/sysclk.h"
@@ -84,8 +55,6 @@
 # include "uc3l/sysclk.h"
 #elif XMEGA
 # include "xmega/sysclk.h"
-#elif MEGA
-# include "mega/sysclk.h"
 #else
 # error Unsupported chip type
 #endif
@@ -97,8 +66,6 @@
 /**
  * \ingroup clk_group
  * \defgroup sysclk_group System Clock Management
- *
- * See \ref sysclk_quickstart.
  *
  * The <em>sysclk</em> API covers the <em>system clock</em> and all
  * clocks derived from it. The system clock is a chip-internal clock on
@@ -135,7 +102,7 @@
  *
  * The following functions are available on all platforms, but there may
  * be variations in the function signature (i.e. parameters) and
- * behavior. These functions are typically called by platform-specific
+ * behaviour. These functions are typically called by platform-specific
  * parts of drivers, and applications that aren't intended to be
  * portable:
  *   - sysclk_enable_peripheral_clock()

@@ -1,67 +1,56 @@
-/*****************************************************************************
- *
- * \file
+/*This file has been prepared for Doxygen automatic documentation generation.*/
+/*! \file *********************************************************************
  *
  * \brief Power Manager driver.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
- * \asf_license_start
+ * - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
+ * - Supported devices:  All AVR32 devices.
+ * - AppNote:
  *
- * \page License
+ * \author               Atmel Corporation: http://www.atmel.com \n
+ *                       Support and FAQ: http://support.atmel.no/
+ *
+ *****************************************************************************/
+
+/* Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
+ * from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ * 4. This software may only be redistributed and used in connection with an Atmel
+ * AVR product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
  * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  *
- * \asf_license_stop
- *
- *****************************************************************************/
-
+ */
 
 #ifndef _PM_H_
 #define _PM_H_
-
-/**
- * \defgroup group_avr32_drivers_pm CPU - PM - Power Manager
- *
- * The Power Manager (PM) controls the oscillators and PLLs, and generates the clocks and resets in the device.
- *
- * \{
- */
 
 #include <avr32/io.h>
 #include "compiler.h"
 #include "preprocessor.h"
 
-
-/*! \name Sleep Functions
- */
-//! @{
 
 /*! \brief Sets the MCU in the specified sleep mode.
  *
@@ -74,30 +63,6 @@
  *   \arg \c AVR32_PM_SMODE_STATIC: Static.
  */
 #define SLEEP(mode)   {__asm__ __volatile__ ("sleep "STRINGZ(mode));}
-
-/*! \brief Enable one or several asynchronous wake-up source.
- *
- * \param awen_mask Mask of asynchronous wake-up sources (use one of the defines
- *  AVR32_PM_AWEN_xxxxWEN_MASK in the part-specific header file under
- *  "toolchain folder"/avr32/inc(lude)/avr32/)
- */
-__always_inline static void pm_asyn_wake_up_enable(unsigned long awen_mask)
-{
-  AVR32_PM.awen |= awen_mask;
-}
-
-/*! \brief Disable one or several asynchronous wake-up sources
- *
- * \param awen_mask Mask of asynchronous wake-up sources (use one of the defines
- *  AVR32_PM_AWEN_xxxxWEN_MASK in the part-specific header file under
- *  "toolchain folder"/avr32/inc(lude)/avr32/)
- */
-__always_inline static void pm_asyn_wake_up_disable(unsigned long awen_mask)
-{
-  AVR32_PM.awen &= ~awen_mask;
-}
-
-//! @}
 
 
 //! Input and output parameters when initializing PM clocks using pm_configure_clocks().
@@ -127,7 +92,10 @@ typedef struct
  * \return The MCU reset cause which can be masked with the
  *         \c AVR32_PM_RCAUSE_x_MASK bit-masks to isolate specific causes.
  */
-__always_inline static unsigned int pm_get_reset_cause(volatile avr32_pm_t *pm)
+#if (defined __GNUC__)
+__attribute__((__always_inline__))
+#endif
+static inline unsigned int pm_get_reset_cause(volatile avr32_pm_t *pm)
 {
   return pm->rcause;
 }
@@ -315,7 +283,7 @@ extern void pm_gc_disable(volatile avr32_pm_t *pm, unsigned int gc);
  * \param mul PLL MUL in the PLL formula
  * \param div PLL DIV in the PLL formula
  * \param osc OSC number (0 for osc0, 1 for osc1)
- * \param lockcount PLL lock count
+ * \param lockcount PLL lockount
  */
 extern void pm_pll_setup(volatile avr32_pm_t *pm, unsigned int pll, unsigned int mul, unsigned int div, unsigned int osc, unsigned int lockcount);
 
@@ -490,7 +458,7 @@ extern void pm_write_gplp(volatile avr32_pm_t *pm, unsigned long gplp, unsigned 
  *
  * \return Status.
  *   \retval 0  Success.
- *   \retval <0 An error occurred.
+ *   \retval <0 An error occured.
  */
 extern long pm_enable_module(volatile avr32_pm_t *pm, unsigned long module);
 
@@ -503,7 +471,7 @@ extern long pm_enable_module(volatile avr32_pm_t *pm, unsigned long module);
  *
  * \return Status.
  *   \retval 0  Success.
- *   \retval <0 An error occurred.
+ *   \retval <0 An error occured.
  */
 extern long pm_disable_module(volatile avr32_pm_t *pm, unsigned long module);
 
@@ -543,8 +511,5 @@ extern int pm_configure_clocks(pm_freq_param_t *param);
  */
 extern void pm_configure_usb_clock(void);
 
-/**
- * \}
- */
 
 #endif  // _PM_H_

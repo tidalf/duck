@@ -3,9 +3,7 @@
  *
  * \brief USB Human Interface Device (HID) protocol definitions.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
+ * Copyright (C) 2009 Atmel Corporation. All rights reserved.
  *
  * \page License
  *
@@ -13,37 +11,33 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
+ * from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ * Atmel AVR product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
  * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
  */
 
 #ifndef _USB_PROTOCOL_HID_H_
 #define _USB_PROTOCOL_HID_H_
-
 
 /**
  * \ingroup usb_protocol_group
@@ -54,12 +48,16 @@
  * @{
  */
 
-//! \name Possible Class value
+/**
+ * \name Possible Class value
+ */
 //@{
 #define  HID_CLASS                            0x03
 //@}
 
-//! \name Possible SubClass value
+/**
+ * \name Possible SubClass value
+ */
 //@{
 //! Interface subclass NO support BOOT protocol
 #define  HID_SUB_CLASS_NOBOOT                 0x00
@@ -67,7 +65,9 @@
 #define  HID_SUB_CLASS_BOOT                   0x01
 //@}
 
-//! \name Possible protocol value
+/**
+ * \name Possible protocol value
+ */
 //@{
 //! Protocol generic standard
 #define  HID_PROTOCOL_GENERIC                 0x00
@@ -78,7 +78,9 @@
 //@}
 
 
-//! \brief Hid USB requests (bRequest)
+/**
+ * \brief Hid USB requests (bRequest)
+ */
 enum usb_reqid_hid {
 	USB_REQ_HID_GET_REPORT = 0x01,
 	USB_REQ_HID_GET_IDLE = 0x02,
@@ -88,14 +90,18 @@ enum usb_reqid_hid {
 	USB_REQ_HID_SET_PROTOCOL = 0x0B,
 };
 
-//! \brief HID USB descriptor types
+/**
+ * \brief HID USB descriptor types
+ */
 enum usb_descriptor_type_hid {
 	USB_DT_HID = 0x21,
 	USB_DT_HID_REPORT = 0x22,
 	USB_DT_HID_PHYSICAL = 0x23,
 };
 
-//! \brief HID Type for report descriptor
+/**
+ * \brief HID Type for report descriptor
+ */
 enum usb_hid_item_report_type {
 	USB_HID_ITEM_REPORT_TYPE_MAIN = 0,
 	USB_HID_ITEM_REPORT_TYPE_GLOBAL = 1,
@@ -103,7 +109,10 @@ enum usb_hid_item_report_type {
 	USB_HID_ITEM_REPORT_TYPE_LONG = 3,
 };
 
-//! \brief HID report type
+
+/**
+ * \brief HID report type
+ */
 enum usb_hid_report_type {
 	USB_HID_REPORT_TYPE_INPUT = 1,
 	USB_HID_REPORT_TYPE_OUTPUT = 2,
@@ -111,26 +120,33 @@ enum usb_hid_report_type {
 };
 
 
-//! \brief HID protocol
+/**
+ * \brief HID protocol
+ */
 enum usb_hid_protocol {
 	USB_HID_PROCOTOL_BOOT = 0,
 	USB_HID_PROCOTOL_REPORT = 1,
 };
 
-COMPILER_PACK_SET(1)
+COMPILER_PACK_SET(1);
 
-//! \brief HID Descriptor
+/**
+ * \brief HID Descriptor
+ */
 typedef struct {
-	uint8_t bLength;          //!< Size of this descriptor in bytes
-	uint8_t bDescriptorType;  //!< HID descriptor type
-	le16_t bcdHID;            //!< Binary Coded Decimal Spec. release
-	uint8_t bCountryCode;     //!< Hardware target country
-	uint8_t bNumDescriptors;  //!< Number of HID class descriptors to follow
-	uint8_t bRDescriptorType; //!< Report descriptor type
-	le16_t wDescriptorLength; //!< Total length of Report descriptor
+	uint8_t bLength;	//!< Size of this descriptor in bytes
+	uint8_t bDescriptorType;	//!< HID descriptor type
+	le16_t bcdHID;	//!< Binay Coded Decimal Spec. release
+	uint8_t bCountryCode;	//!< Hardware target country
+	uint8_t bNumDescriptors;	//!< Number of HID class descriptors to follow
+	uint8_t bRDescriptorType;	//!< Report descriptor type
+	le16_t wDescriptorLength;	//!< Total length of Report descriptor
 } usb_hid_descriptor_t;
 
-COMPILER_PACK_RESET()
+   //! \name Structure for report item
+   //! @{
+
+COMPILER_PACK_RESET();
 
    //! \name HID Report type
    //! Used by SETUP_HID_GET_REPORT & SETUP_HID_SET_REPORT
@@ -151,42 +167,42 @@ COMPILER_PACK_RESET()
 
       //! \name Country code
       //! @{
-#define  USB_HID_NO_COUNTRY_CODE            0   // Not Supported
-#define  USB_HID_COUNTRY_ARABIC             1   // Arabic
-#define  USB_HID_COUNTRY_BELGIAN            2   // Belgian
-#define  USB_HID_COUNTRY_CANADIAN_BILINGUAL 3   // Canadian-Bilingual
-#define  USB_HID_COUNTRY_CANADIAN_FRENCH    4   // Canadian-French
-#define  USB_HID_COUNTRY_CZECH_REPUBLIC     5   // Czech Republic
-#define  USB_HID_COUNTRY_DANISH             6   // Danish
-#define  USB_HID_COUNTRY_FINNISH            7   // Finnish
-#define  USB_HID_COUNTRY_FRENCH             8   // French
-#define  USB_HID_COUNTRY_GERMAN             9   // German
-#define  USB_HID_COUNTRY_GREEK              10  // Greek
-#define  USB_HID_COUNTRY_HEBREW             11  // Hebrew
-#define  USB_HID_COUNTRY_HUNGARY            12  // Hungary
-#define  USB_HID_COUNTRY_INTERNATIONAL_ISO  13  // International (ISO)
-#define  USB_HID_COUNTRY_ITALIAN            14  // Italian
-#define  USB_HID_COUNTRY_JAPAN_KATAKANA     15  // Japan (Katakana)
-#define  USB_HID_COUNTRY_KOREAN             16  // Korean
-#define  USB_HID_COUNTRY_LATIN_AMERICAN     17  // Latin American
-#define  USB_HID_COUNTRY_NETHERLANDS_DUTCH  18  // Netherlands/Dutch
-#define  USB_HID_COUNTRY_NORWEGIAN          19  // Norwegian
-#define  USB_HID_COUNTRY_PERSIAN_FARSI      20  // Persian (Farsi)
-#define  USB_HID_COUNTRY_POLAND             21  // Poland
-#define  USB_HID_COUNTRY_PORTUGUESE         22  // Portuguese
-#define  USB_HID_COUNTRY_RUSSIA             23  // Russia
-#define  USB_HID_COUNTRY_SLOVAKIA           24  // Slovakia
-#define  USB_HID_COUNTRY_SPANISH            25  // Spanish
-#define  USB_HID_COUNTRY_SWEDISH            26  // Swedish
-#define  USB_HID_COUNTRY_SWISS_FRENCH       27  // Swiss/French
-#define  USB_HID_COUNTRY_SWISS_GERMAN       28  // Swiss/German
-#define  USB_HID_COUNTRY_SWITZERLAND        29  // Switzerland
-#define  USB_HID_COUNTRY_TAIWAN             30  // Taiwan
-#define  USB_HID_COUNTRY_TURKISH_Q          31  // Turkish-Q
-#define  USB_HID_COUNTRY_UK                 32  // UK
-#define  USB_HID_COUNTRY_US                 33  // US
-#define  USB_HID_COUNTRY_YUGOSLAVIA         34  // Yugoslavia
-#define  USB_HID_COUNTRY_TURKISH_F          35  // Turkish-F
+#define  USB_HID_NO_COUNTRY_CODE                  0	// Not Supported
+#define  USB_HID_COUNTRY_ARABIC                   1	// Arabic
+#define  USB_HID_COUNTRY_BELGIAN                  2	// Belgian
+#define  USB_HID_COUNTRY_CANADIAN_BILINGUAL       3	// Canadian-Bilingual
+#define  USB_HID_COUNTRY_CANADIAN_FRENCH          4	// Canadian-French
+#define  USB_HID_COUNTRY_CZECH_REPUBLIC           5	// Czech Republic
+#define  USB_HID_COUNTRY_DANISH                   6	// Danish
+#define  USB_HID_COUNTRY_FINNISH                  7	// Finnish
+#define  USB_HID_COUNTRY_FRENCH                   8	// French
+#define  USB_HID_COUNTRY_GERMAN                   9	// German
+#define  USB_HID_COUNTRY_GREEK                    10	// Greek
+#define  USB_HID_COUNTRY_HEBREW                   11	// Hebrew
+#define  USB_HID_COUNTRY_HUNGARY                  12	// Hungary
+#define  USB_HID_COUNTRY_INTERNATIONAL_ISO        13	// International (ISO)
+#define  USB_HID_COUNTRY_ITALIAN                  14	// Italian
+#define  USB_HID_COUNTRY_JAPAN_KATAKANA           15	// Japan (Katakana)
+#define  USB_HID_COUNTRY_KOREAN                   16	// Korean
+#define  USB_HID_COUNTRY_LATIN_AMERICAN           17	// Latin American
+#define  USB_HID_COUNTRY_NETHERLANDS_DUTCH        18	// Netherlands/Dutch
+#define  USB_HID_COUNTRY_NORWEGIAN                19	// Norwegian
+#define  USB_HID_COUNTRY_PERSIAN_FARSI            20	// Persian (Farsi)
+#define  USB_HID_COUNTRY_POLAND                   21	// Poland
+#define  USB_HID_COUNTRY_PORTUGUESE               22	// Portuguese
+#define  USB_HID_COUNTRY_RUSSIA                   23	// Russia
+#define  USB_HID_COUNTRY_SLOVAKIA                 24	// Slovakia
+#define  USB_HID_COUNTRY_SPANISH                  25	// Spanish
+#define  USB_HID_COUNTRY_SWEDISH                  26	// Swedish
+#define  USB_HID_COUNTRY_SWISS_FRENCH             27	// Swiss/French
+#define  USB_HID_COUNTRY_SWISS_GERMAN             28	// Swiss/German
+#define  USB_HID_COUNTRY_SWITZERLAND              29	// Switzerland
+#define  USB_HID_COUNTRY_TAIWAN                   30	// Taiwan
+#define  USB_HID_COUNTRY_TURKISH_Q                31	// Turkish-Q
+#define  USB_HID_COUNTRY_UK                       32	// UK
+#define  USB_HID_COUNTRY_US                       33	// US
+#define  USB_HID_COUNTRY_YUGOSLAVIA               34	// Yugoslavia
+#define  USB_HID_COUNTRY_TURKISH_F                35	// Turkish-F
       //! @}
    //! @}
 //! @}
@@ -237,12 +253,12 @@ COMPILER_PACK_RESET()
 #define  HID_SPACEBAR         44
 #define  HID_UNDERSCORE       45
 #define  HID_PLUS             46
-#define  HID_OPEN_BRACKET     47 // {
-#define  HID_CLOSE_BRACKET    48 // }
+#define  HID_OPEN_BRACKET     47	// {
+#define  HID_CLOSE_BRACKET    48	// }
 #define  HID_BACKSLASH        49
-#define  HID_ASH              50 // # ~
-#define  HID_COLON            51 // ; :
-#define  HID_QUOTE            52 // ' "
+#define  HID_ASH              50	// # ~
+#define  HID_COLON            51	// ; :
+#define  HID_QUOTE            52	// ' "
 #define  HID_TILDE            53
 #define  HID_COMMA            54
 #define  HID_DOT              55
@@ -297,11 +313,11 @@ COMPILER_PACK_RESET()
 #define  HID_MODIFIER_LEFT_CTRL     0x01
 #define  HID_MODIFIER_LEFT_SHIFT    0x02
 #define  HID_MODIFIER_LEFT_ALT      0x04
-#define  HID_MODIFIER_LEFT_UI       0x08
+#define  HID_MODIFIER_LEFT_UI      0x08
 #define  HID_MODIFIER_RIGHT_CTRL    0x10
 #define  HID_MODIFIER_RIGHT_SHIFT   0x20
 #define  HID_MODIFIER_RIGHT_ALT     0x40
-#define  HID_MODIFIER_RIGHT_UI      0x80
+#define  HID_MODIFIER_RIGHT_UI     0x80
    //! @}
 //! @}
 

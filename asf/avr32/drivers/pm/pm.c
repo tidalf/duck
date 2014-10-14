@@ -1,47 +1,48 @@
-/*****************************************************************************
- *
- * \file
+/*This file has been prepared for Doxygen automatic documentation generation.*/
+/*! \file *********************************************************************
  *
  * \brief Power Manager driver.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
- * \asf_license_start
+ * - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
+ * - Supported devices:  All AVR32 devices.
+ * - AppNote:
  *
- * \page License
+ * \author               Atmel Corporation: http://www.atmel.com \n
+ *                       Support and FAQ: http://support.atmel.no/
+ *
+ *****************************************************************************/
+
+/* Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
+ * from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ * 4. This software may only be redistributed and used in connection with an Atmel
+ * AVR product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
  * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  *
- * \asf_license_stop
- *
- *****************************************************************************/
-
+ */
 
 #include "compiler.h"
 #include "pm.h"
@@ -493,12 +494,12 @@ void pm_bod_enable_irq(volatile avr32_pm_t *pm)
 
 void pm_bod_disable_irq(volatile avr32_pm_t *pm)
 {
-  bool global_interrupt_enabled = cpu_irq_is_enabled();
+  Bool global_interrupt_enabled = Is_global_interrupt_enabled();
 
-  if (global_interrupt_enabled) cpu_irq_disable();
+  if (global_interrupt_enabled) Disable_global_interrupt();
   pm->idr = AVR32_PM_IDR_BODDET_MASK;
   pm->isr;
-  if (global_interrupt_enabled) cpu_irq_enable();
+  if (global_interrupt_enabled) Enable_global_interrupt();
 }
 
 

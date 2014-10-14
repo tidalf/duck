@@ -3,9 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
+ * Copyright (C) 2009 Atmel Corporation. All rights reserved.
  *
  * \page License
  *
@@ -13,32 +11,29 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
+ * from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ * Atmel AVR product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
  * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
  */
 #include <compiler.h>
 #include <stdbool.h>
@@ -80,7 +75,7 @@
  * \name Initial module clock masks
  *
  * These are the mask values written to the xxxMASK registers during
- * initialization if the user has overridden the default behavior of all clocks
+ * initialization if the user has overriden the default behaviour of all clocks
  * left enabled. These values assume that:
  *   - Debugging should be possible
  *   - The program may be running from flash
@@ -118,7 +113,7 @@ static uint8_t sysclk_pbb_refcount;
 
 #if defined(CONFIG_SYSCLK_DEFAULT_RETURNS_SLOW_OSC)
 /**
- * \brief boolean signalling that the sysclk_init is done.
+ * \brief boolean signaling that the sysclk_init is done.
  */
 bool sysclk_initialized = false;
 #endif
@@ -231,15 +226,67 @@ void sysclk_disable_pbb_module(unsigned int index)
 /**
  * \brief Enable the USB generic clock
  *
- * \pre The USB generic clock must be configured to 48MHz.
+ * \pre The USB generick clock must be configurated to 48MHz.
  * CONFIG_USBCLK_SOURCE and CONFIG_USBCLK_DIV must be defined with proper
  * configuration. The selected clock source must also be configured.
  */
 void sysclk_enable_usb(void)
 {
+	struct genclk_config gcfg;
+
 	sysclk_enable_pbb_module(SYSCLK_USBB_REGS);
 	sysclk_enable_hsb_module(SYSCLK_USBB_DATA);
-	genclk_enable_config(AVR32_PM_GCLK_USBB, CONFIG_USBCLK_SOURCE, CONFIG_USBCLK_DIV);
+	genclk_config_defaults(&gcfg, AVR32_PM_GCLK_USBB);
+
+	/*
+	 * Switch to the system clock selected by the user.
+	 */
+	switch (CONFIG_USBCLK_SOURCE) {
+#ifdef BOARD_OSC0_HZ
+	case USBCLK_SRC_OSC0:
+		osc_enable(0);
+		osc_wait_ready(0);
+		genclk_config_set_source(&gcfg, GENCLK_SRC_OSC0);
+		break;
+#endif
+
+#ifdef CONFIG_PLL0_SOURCE
+	case USBCLK_SRC_PLL0: {
+		struct pll_config pllcfg;
+
+		osc_enable(CONFIG_PLL0_SOURCE);
+		osc_wait_ready(CONFIG_PLL0_SOURCE);
+
+		pll_config_defaults(&pllcfg, 0);
+		pll_enable(&pllcfg, 0);
+		pll_wait_for_lock(0);
+		genclk_config_set_source(&gcfg, GENCLK_SRC_PLL0);
+		break;
+	}
+#endif
+
+#ifdef CONFIG_PLL1_SOURCE
+	case USBCLK_SRC_PLL1: {
+		struct pll_config pllcfg;
+
+		osc_enable(CONFIG_PLL1_SOURCE);
+		osc_wait_ready(CONFIG_PLL1_SOURCE);
+
+		pll_config_defaults(&pllcfg, 1);
+		pll_enable(&pllcfg, 1);
+		pll_wait_for_lock(1);
+		genclk_config_set_source(&gcfg, GENCLK_SRC_PLL1);
+		break;
+	}
+#endif
+
+	default:
+		/* unhandled_case(CONFIG_SYSCLK_SOURCE); */
+		break;
+	}
+
+	genclk_config_set_divider(&gcfg, CONFIG_USBCLK_DIV);
+	genclk_enable(&gcfg, AVR32_PM_GCLK_USBB);
 }
 
 /**
@@ -268,7 +315,9 @@ void sysclk_init(void)
 				CONFIG_SYSCLK_PBB_DIV);
 	}
 
-	/* Switch to system clock selected by user */
+	/*
+	 * Switch to the system clock selected by the user.
+	 */
 	switch (CONFIG_SYSCLK_SOURCE) {
 	case SYSCLK_SRC_RCSYS:
 		/* Already running from RCOSC */
@@ -276,8 +325,8 @@ void sysclk_init(void)
 
 #ifdef BOARD_OSC0_HZ
 	case SYSCLK_SRC_OSC0:
-		osc_enable(OSC_ID_OSC0);
-		osc_wait_ready(OSC_ID_OSC0);
+		osc_enable(0);
+		osc_wait_ready(0);
 		// Set a flash wait state depending on the new cpu frequency.
 		flash_set_bus_freq(BOARD_OSC0_HZ);
 		sysclk_set_source(SYSCLK_SRC_OSC0);
@@ -286,16 +335,23 @@ void sysclk_init(void)
 
 #ifdef CONFIG_PLL0_SOURCE
 	case SYSCLK_SRC_PLL0: {
-		pll_enable_config_defaults(0);
+		struct pll_config pllcfg;
+
+		osc_enable(CONFIG_PLL0_SOURCE);
+		osc_wait_ready(CONFIG_PLL0_SOURCE);
+
+		pll_config_defaults(&pllcfg, 0);
+		pll_enable(&pllcfg, 0);
+		pll_wait_for_lock(0);
 		// Set a flash wait state depending on the new cpu frequency.
-		flash_set_bus_freq(sysclk_get_cpu_hz());
+		flash_set_bus_freq(sysclk_get_main_hz());
 		sysclk_set_source(SYSCLK_SRC_PLL0);
 		break;
 	}
 #endif
 
 	default:
-		Assert(false);
+		/* unhandled_case(CONFIG_SYSCLK_SOURCE); */
 		break;
 	}
 

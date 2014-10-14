@@ -1,6 +1,5 @@
-/*****************************************************************************
- *
- * \file
+/*This file is prepared for Doxygen automatic documentation generation.*/
+/*! \file *********************************************************************
  *
  * \brief AT32UC3B EVK1101 board header file.
  *
@@ -9,44 +8,45 @@
  *
  * To use this board, define BOARD=EVK1101.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
+ * - Supported devices:  All AVR32 AT32UC3B devices can be used.
+ * - AppNote:
  *
- * \asf_license_start
+ * \author               Atmel Corporation: http://www.atmel.com \n
+ *                       Support and FAQ: http://support.atmel.no/
  *
- * \page License
+ ******************************************************************************/
+
+/* Copyright (c) 2009 Atmel Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
+ * from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ * 4. This software may only be redistributed and used in connection with an Atmel
+ * AVR product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
  * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  *
- * \asf_license_stop
- *
- ******************************************************************************/
-
+ */
 
 #ifndef _EVK1101_H_
 #define _EVK1101_H_
@@ -245,19 +245,10 @@
 /*! \name GPIO and SPI Connections of the SD/MMC Connector
  */
 //! @{
-#define SD_MMC_SPI_MEM_CNT          1
-#define SD_MMC_0_CD_GPIO            AVR32_PIN_PB00
-#define SD_MMC_0_CD_DETECT_VALUE    1
-#define SD_MMC_0_WP_GPIO            AVR32_PIN_PB01
-#define SD_MMC_0_WP_DETECT_VALUE    0
-#define SD_MMC_SPI_0_CS             1
-
-// Keep it for SD MMC stack ASF V1.7
-#define SD_MMC_CARD_DETECT_PIN      SD_MMC_0_CD_GPIO
-#define SD_MMC_WRITE_PROTECT_PIN    SD_MMC_0_WP_GPIO
-#define SD_MMC_SPI_NPCS             SD_MMC_SPI_0_CS
-
+#define SD_MMC_CARD_DETECT_PIN      AVR32_PIN_PB00
+#define SD_MMC_WRITE_PROTECT_PIN    AVR32_PIN_PB01
 #define SD_MMC_SPI                  (&AVR32_SPI)
+#define SD_MMC_SPI_NPCS             1
 #define SD_MMC_SPI_SCK_PIN          AVR32_SPI_SCK_0_0_PIN
 #define SD_MMC_SPI_SCK_FUNCTION     AVR32_SPI_SCK_0_0_FUNCTION
 #define SD_MMC_SPI_MISO_PIN         AVR32_SPI_MISO_0_0_PIN
@@ -268,18 +259,6 @@
 #define SD_MMC_SPI_NPCS_FUNCTION    AVR32_SPI_NPCS_1_0_FUNCTION
 //! @}
 
-/*! \name USART connection to the UC3B board controller
- */
-//! @{
-#define USART                       (&AVR32_USART1)
-#define USART_RXD_PIN               AVR32_USART1_RXD_0_0_PIN
-#define USART_RXD_FUNCTION          AVR32_USART1_RXD_0_0_FUNCTION
-#define USART_TXD_PIN               AVR32_USART1_TXD_0_0_PIN
-#define USART_TXD_FUNCTION          AVR32_USART1_TXD_0_0_FUNCTION
-#define USART_IRQ                   AVR32_USART1_IRQ
-#define USART_IRQ_GROUP             AVR32_USART1_IRQ_GROUP
-#define USART_SYSCLK                SYSCLK_USART1
-//! @}
 
 /*! \name TWI Connections of the Spare TWI Connector
  */

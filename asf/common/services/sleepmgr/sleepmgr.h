@@ -3,9 +3,7 @@
  *
  * \brief Sleep manager
  *
- * Copyright (c) 2010 - 2014 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
+ * Copyright (C) 2010 Atmel Corporation. All rights reserved.
  *
  * \page License
  *
@@ -13,57 +11,43 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
+ * from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ * Atmel AVR product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
  * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
  */
 #ifndef SLEEPMGR_H
 #define SLEEPMGR_H
 
 #include <compiler.h>
+#include <sleep.h>
 #include <parts.h>
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
-# include "sam/sleepmgr.h"
-#elif XMEGA
+#if defined(XMEGA)
 # include "xmega/sleepmgr.h"
-#elif UC3
+#elif (defined(__GNUC__) && defined(__AVR32__)) || (defined(__ICCAVR32__) || defined(__AAVR32__))
 # include "uc3/sleepmgr.h"
-#elif SAM4L
-# include "sam4l/sleepmgr.h"
-#elif MEGA
-# include "mega/sleepmgr.h"
-#elif (SAMD20 || SAMD21 || SAMR21)
-# include "samd/sleepmgr.h"
 #else
 # error Unsupported device.
-#endif
-
-#ifdef __cplusplus
-extern "C" {
 #endif
 
 /**
@@ -151,8 +135,6 @@ static inline void sleepmgr_lock_mode(enum sleepmgr_mode mode)
 
 	// Leave the critical section
 	cpu_irq_restore(flags);
-#else
-	UNUSED(mode);
 #endif /* CONFIG_SLEEPMGR_ENABLE */
 }
 
@@ -178,38 +160,7 @@ static inline void sleepmgr_unlock_mode(enum sleepmgr_mode mode)
 
 	// Leave the critical section
 	cpu_irq_restore(flags);
-#else
-	UNUSED(mode);
 #endif /* CONFIG_SLEEPMGR_ENABLE */
-}
-
- /**
- * \brief Retrieves the deepest allowable sleep mode
- *
- * Searches through the sleep mode lock counts, starting at the shallowest sleep
- * mode, until the first non-zero lock count is found. The deepest allowable
- * sleep mode is then returned.
- */
-static inline enum sleepmgr_mode sleepmgr_get_sleep_mode(void)
-{
-	enum sleepmgr_mode sleep_mode = SLEEPMGR_ACTIVE;
-
-#ifdef CONFIG_SLEEPMGR_ENABLE
-	uint8_t *lock_ptr = sleepmgr_locks;
-
-	// Find first non-zero lock count, starting with the shallowest modes.
-	while (!(*lock_ptr)) {
-		lock_ptr++;
-		sleep_mode = (enum sleepmgr_mode)(sleep_mode + 1);
-	}
-
-	// Catch the case where one too many sleepmgr_unlock_mode() call has been
-	// performed on the deepest sleep mode.
-	Assert((uintptr_t)(lock_ptr - sleepmgr_locks) < SLEEPMGR_NR_OF_MODES);
-
-#endif /* CONFIG_SLEEPMGR_ENABLE */
-
-	return sleep_mode;
 }
 
 /**
@@ -225,32 +176,6 @@ static inline enum sleepmgr_mode sleepmgr_get_sleep_mode(void)
  * mode being locked.
  */
 
-static inline void sleepmgr_enter_sleep(void)
-{
-#ifdef CONFIG_SLEEPMGR_ENABLE
-	enum sleepmgr_mode sleep_mode;
-
-	cpu_irq_disable();
-
-	// Find the deepest allowable sleep mode
-	sleep_mode = sleepmgr_get_sleep_mode();
-	// Return right away if first mode (ACTIVE) is locked.
-	if (sleep_mode==SLEEPMGR_ACTIVE) {
-		cpu_irq_enable();
-		return;
-	}
-	// Enter the deepest allowable sleep mode with interrupts enabled
-	sleepmgr_sleep(sleep_mode);
-#else
-	cpu_irq_enable();
-#endif /* CONFIG_SLEEPMGR_ENABLE */
-}
-
-
 //! @}
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* SLEEPMGR_H */
