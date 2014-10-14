@@ -2,9 +2,12 @@
  *
  * \file
  *
- * \brief Preprocessor stringizing utils.
+ * \brief AT32UC3 SKRHABE010 (Joystick) header file.
  *
- * Copyright (c) 2009 Atmel Corporation. All rights reserved.
+ * This file contains definitions and services related to the features of the
+ * 4-directional with Center Push SKRHABE010 joystick.
+ *
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,42 +46,73 @@
  ******************************************************************************/
 
 
-#ifndef _STRINGZ_H_
-#define _STRINGZ_H_
+#ifndef _SKRHABE010_H_
+#define _SKRHABE010_H_
 
 /**
- * \defgroup group_avr32_utils_stringz Preprocessor - Stringize
+ * \defgroup group_avr32_components_joystick_skrhabe010 Joystick interface (5-way)
  *
- * \ingroup group_avr32_utils
+ * A 5-way joystick (left, right, up, down, press) interface using 5 GPIOs.
  *
  * \{
  */
 
-/*! \brief Stringize.
- *
- * Stringize a preprocessing token, this token being allowed to be \#defined.
- *
- * May be used only within macros with the token passed as an argument if the token is \#defined.
- *
- * For example, writing STRINGZ(PIN) within a macro \#defined by PIN_NAME(PIN)
- * and invoked as PIN_NAME(PIN0) with PIN0 \#defined as A0 is equivalent to
- * writing "A0".
- */
-#define STRINGZ(x)                                #x
+#include "compiler.h"
+#include "board.h"
+#include "gpio.h"
 
-/*! \brief Absolute stringize.
+
+/*! \brief This function test it the joystick is on the right.
  *
- * Stringize a preprocessing token, this token being allowed to be \#defined.
- *
- * No restriction of use if the token is \#defined.
- *
- * For example, writing ASTRINGZ(PIN0) anywhere with PIN0 \#defined as A0 is
- * equivalent to writing "A0".
+ * \return \c true if the joystick is on the right, otherwise \c 0.
  */
-#define ASTRINGZ(x)                               STRINGZ(x)
+__always_inline static int is_joystick_right( void )
+{
+  return (gpio_get_pin_value(GPIO_JOYSTICK_RIGHT)) == GPIO_JOYSTICK_RIGHT_PRESSED;
+}
+
+
+/*! \brief This function test it the joystick is on the left.
+ *
+ * \return \c true if the joystick is on the left, otherwise \c 0.
+ */
+__always_inline static int is_joystick_left( void )
+{
+  return (gpio_get_pin_value(GPIO_JOYSTICK_LEFT)) == GPIO_JOYSTICK_LEFT_PRESSED;
+}
+
+
+/*! \brief This function test it the joystick is up.
+ *
+ * \return \c true if the joystick is up, otherwise \c 0.
+ */
+__always_inline static int is_joystick_up( void )
+{
+  return (gpio_get_pin_value(GPIO_JOYSTICK_UP)) == GPIO_JOYSTICK_UP_PRESSED;
+}
+
+
+/*! \brief This function test it the joystick is down.
+ *
+ * \return \c true if the joystick is down, otherwise \c 0.
+ */
+__always_inline static int is_joystick_down( void )
+{
+  return (gpio_get_pin_value(GPIO_JOYSTICK_DOWN)) == GPIO_JOYSTICK_DOWN_PRESSED;
+}
+
+
+/*! \brief This function test it the joystick is pressed.
+ *
+ * \return \c true if the joystick is pressed, otherwise \c 0.
+ */
+__always_inline static int is_joystick_pressed( void )
+{
+  return (gpio_get_pin_value(GPIO_JOYSTICK_PUSH)) == GPIO_JOYSTICK_PUSH_PRESSED;
+}
 
 /**
  * \}
  */
 
-#endif  // _STRINGZ_H_
+#endif  // _SKRHABE010_H_

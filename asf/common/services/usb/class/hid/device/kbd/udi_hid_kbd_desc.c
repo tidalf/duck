@@ -4,7 +4,9 @@
  * \brief Default descriptors for a USB Device
  * with a single interface HID keyboard
  *
- * Copyright (C) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
  *
  * \page License
  *
@@ -12,29 +14,32 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
+ *    this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
- * from this software without specific prior written permission.
+ *    from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- * Atmel AVR product.
+ *    Atmel microcontroller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
  * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
- * DAMAGE.
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
  */
 
 #include "conf_usb.h"
@@ -45,16 +50,18 @@
 
 /**
  * \ingroup udi_hid_keyboard_group
- * \defgroup udi_hid_keyboard_group_desc Default descriptors for a USB Device
- * with a single interface HID keyboard
+ * \defgroup udi_hid_keyboard_group_single_desc USB device descriptors for a single interface
  *
+ * The following structures provide the USB device descriptors required
+ * for USB Device with a single interface HID keyboard.
+ *
+ * It is ready to use and do not require more definition.
  * @{
  */
 
 //! Only one interface for this device
 #define  USB_DEVICE_NB_INTERFACE       1
 
-/**INDENT-OFF**/
 //! USB Device Descriptor
 COMPILER_WORD_ALIGNED
 UDC_DESC_STORAGE usb_dev_desc_t udc_device_desc = {
@@ -72,17 +79,17 @@ UDC_DESC_STORAGE usb_dev_desc_t udc_device_desc = {
 #ifdef USB_DEVICE_MANUFACTURE_NAME
 	.iManufacturer             = 1,
 #else
-	.iManufacturer             = 0,  // No manufacture string 
+	.iManufacturer             = 0,  // No manufacture string
 #endif
 #ifdef USB_DEVICE_PRODUCT_NAME
 	.iProduct                  = 2,
 #else
-	.iProduct                  = 0,  // No product string 
+	.iProduct                  = 0,  // No product string
 #endif
 #ifdef USB_DEVICE_SERIAL_NAME
 	.iSerialNumber             = 3,
 #else
-	.iSerialNumber             = 0,  // No serial string 
+	.iSerialNumber             = 0,  // No serial string
 #endif
 	.bNumConfigurations        = 1
 };
@@ -104,12 +111,12 @@ UDC_DESC_STORAGE usb_dev_qual_desc_t udc_device_qual = {
 #endif
 
 //! Structure for USB Device Configuration Descriptor
-COMPILER_PACK_SET(1);
+COMPILER_PACK_SET(1)
 typedef struct {
 	usb_conf_desc_t conf;
 	udi_hid_kbd_desc_t hid_kbd;
 } udc_desc_t;
-COMPILER_PACK_RESET();
+COMPILER_PACK_RESET()
 
 //! USB Device Configuration Descriptor filled for FS and HS
 COMPILER_WORD_ALIGNED
@@ -131,7 +138,7 @@ UDC_DESC_STORAGE udc_desc_t udc_desc = {
  */
 //@{
 
-//! Associate an UDI for each USB interface 
+//! Associate an UDI for each USB interface
 UDC_DESC_STORAGE udi_api_t *udi_apis[USB_DEVICE_NB_INTERFACE] = {
 	&udi_api_hid_kbd,
 };
@@ -154,5 +161,4 @@ UDC_DESC_STORAGE udc_config_t udc_config = {
 };
 
 //@}
-/**INDENT-ON**/
 //@}

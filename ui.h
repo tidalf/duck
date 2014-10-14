@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Common User Interface for HID Mouse application
+ * \brief Common User Interface for HID Keyboard application
  *
  * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
  *
@@ -66,8 +66,8 @@ void ui_wakeup(void);
  */
 void ui_process(uint16_t framenumber);
 
-//! This function is called when a HID report is received
-//!
-void ui_led_change(uint8_t *report);
+/*! \brief Turn on or off the keyboard LEDs
+ */
+void ui_kbd_led(uint8_t value);
 
 #endif // _UI_H_

@@ -3,7 +3,9 @@
  *
  * \brief USB Device Human Interface Device (HID) keyboard interface.
  *
- * Copyright (C) 2009 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
  *
  * \page License
  *
@@ -11,29 +13,32 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
+ *    this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
- * from this software without specific prior written permission.
+ *    from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- * Atmel AVR product.
+ *    Atmel microcontroller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
  * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
- * DAMAGE.
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
  */
 
 #include "conf_usb.h"
@@ -45,14 +50,13 @@
 #include <string.h>
 
 /**
- * \addtogroup udi_hid_keyboard_group
+ * \ingroup udi_hid_keyboard_group
+ * \defgroup udi_hid_keyboard_group_udc Interface with USB Device Core (UDC)
+ *
+ * Structures and functions required by UDC.
+ * 
  * @{
  */
-
-/**
- * \name Interface for UDC
- */
-//@{
 
 bool udi_hid_kbd_enable(void);
 void udi_hid_kbd_disable(void);
@@ -65,10 +69,18 @@ UDC_DESC_STORAGE udi_api_t udi_api_hid_kbd = {
 	.disable = (void (*)(void))udi_hid_kbd_disable,
 	.setup = (bool(*)(void))udi_hid_kbd_setup,
 	.getsetting = (uint8_t(*)(void))udi_hid_kbd_getsetting,
+	.sof_notify = NULL,
 };
-
 //@}
 
+
+/**
+ * \ingroup udi_hid_keyboard_group
+ * \defgroup udi_hid_keyboard_group_internal Implementation of UDI HID keyboard
+ *
+ * Class internal implementation
+ * @{
+ */
 
 /**
  * \name Internal defines and variables to manage HID keyboard
@@ -163,7 +175,8 @@ static bool udi_hid_kbd_send_report(void);
  *
  * \return \c 1 if function was successfully done, otherwise \c 0.
  */
-void udi_hid_kbd_report_sent(udd_ep_status_t status, iram_size_t nb_sent);
+static void udi_hid_kbd_report_sent(udd_ep_status_t status, iram_size_t nb_sent,
+		udd_ep_id_t ep);
 
 /**
  * \brief Callback called to update report from USB host
@@ -233,7 +246,7 @@ bool udi_hid_kbd_modifier_up(uint8_t modifier_id)
 	irqflags_t flags = cpu_irq_save();
 
 	// Fill report
-	udi_hid_kbd_report[0] &= ~modifier_id;
+	udi_hid_kbd_report[0] &= ~(unsigned)modifier_id;
 	udi_hid_kbd_b_report_valid = true;
 
 	// Send report
@@ -316,7 +329,7 @@ bool udi_hid_kbd_down(uint8_t key_id)
 
 	if (UDI_HID_KBD_REPORT_SIZE == i) {
 		// Array full
-		// TODO manage more than UDI_HID_KBD_REPORT_SIZE key pressed in same time 
+		// TODO manage more than UDI_HID_KBD_REPORT_SIZE key pressed in same time
 		cpu_irq_restore(flags);
 		return false;
 	}
@@ -352,8 +365,12 @@ static bool udi_hid_kbd_send_report(void)
 	return udi_hid_kbd_b_report_trans_ongoing;
 }
 
-void udi_hid_kbd_report_sent(udd_ep_status_t status, iram_size_t nb_sent)
+static void udi_hid_kbd_report_sent(udd_ep_status_t status, iram_size_t nb_sent,
+		udd_ep_id_t ep)
 {
+	UNUSED(status);
+	UNUSED(nb_sent);
+	UNUSED(ep);
 	udi_hid_kbd_b_report_trans_ongoing = false;
 	if (udi_hid_kbd_b_report_valid) {
 		udi_hid_kbd_send_report();
